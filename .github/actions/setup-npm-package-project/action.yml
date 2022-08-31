@@ -1,0 +1,50 @@
+# Based on documentation from actions/setup-node for installing private packages
+# https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#use-private-packages
+name: 'Setup npm package project'
+Description: 'Intialize an npm based project with private packages'
+inputs:
+  node-version:
+    description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
+  registry-url:
+    description: 'Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN.'
+    default: 'https://npm.pkg.github.com'
+  npm-auth-token:
+    description: 'Token used to authenticate with npm'
+  package-directories:
+    description: 'Space delimited list of package directories to initialize'
+    default: '.'
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        registry-url: ${{ inputs.registry-url }}
+    # Skip post-install scripts here, as a malicious
+    # script could steal NODE_AUTH_TOKEN.
+    - run: |
+        for $dir in $PACKAGE_DIRECTORIES; do
+          cd "$GITHUB_WORKSPACE/$dir"
+          npm ci --ignore-scripts
+        done
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.npm-auth-token }}
+        PACKAGE_DIRECTORIES: ${{ toJSON(inputs.package-directories) }}
+      shell: bash
+    # `npm rebuild` will run all those post-install scripts for us.
+    - run: |
+        for $dir in $PACKAGE_DIRECTORIES; do
+          cd "$GITHUB_WORKSPACE/$dir"
+          npm rebuild && npm run prepare --if-present
+        done
+      env:
+        PACKAGE_DIRECTORIES: ${{ toJSON(inputs.package-directories) }}
+      shell: bash
+    - run: |
+        NAME=$(npm pkg get name | tr -d '"' | sed 's|.*/||')
+        VERSION=$(npm pkg get version | tr -d '"')
+        BRANCH=$(git branch --show-current)
+        SHA=$(git rev-parse HEAD)
+        echo "BUILD_NAME=$NAME-v$VERSION-$BRANCH-$SHA" >> $GITHUB_ENV
+      shell: bash
+  
