@@ -16,7 +16,7 @@ jobs:
       - uses: ./.github/actions/setup-npm-package-project
         with:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
-          package-directories: ${{ input.package-directories }}
+          package-directories: ${{ inputs.package-directories }}
       - name: Run tests
         env:
           PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
@@ -36,7 +36,7 @@ jobs:
         uses: ./.github/actions/setup-npm-package-project
         with:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
-          package-directories: ${{ input.package-directories }}
+          package-directories: ${{ inputs.package-directories }}
       - name: Build packages
         env:
           PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
