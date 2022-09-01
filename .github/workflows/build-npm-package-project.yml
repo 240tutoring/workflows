@@ -40,6 +40,7 @@ jobs:
           PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
         run: |
           for dir in $PACKAGE_DIRECTORIES; do
+            mkdir -p build
             cd "$GITHUB_WORKSPACE/$dir"
             npm run ci:build
             npm pack --pack-destination "$GITHUB_WORKSPACE/build"
