@@ -1,7 +1,5 @@
 on:
   workflow_call:
-    secrets:
-      BUILDER_TOKEN:
     inputs:
       package-directories:
         description: 'space delimited list of package directories to build'
@@ -12,7 +10,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      run: echo ${{ inputs.package-directories }}
+      # - uses: actions/checkout@v3
       # - uses: ./.github/actions/setup-npm-package-project
       #   with:
       #     npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
