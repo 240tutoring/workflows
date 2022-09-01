@@ -29,7 +29,7 @@ runs:
         done
       env:
         NODE_AUTH_TOKEN: ${{ inputs.npm-auth-token }}
-        PACKAGE_DIRECTORIES: ${{ toJSON(inputs.package-directories) }}
+        PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
       shell: bash
     # `npm rebuild` will run all those post-install scripts for us.
     - run: |
@@ -38,7 +38,7 @@ runs:
           npm rebuild && npm run prepare --if-present
         done
       env:
-        PACKAGE_DIRECTORIES: ${{ toJSON(inputs.package-directories) }}
+        PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
       shell: bash
     - run: |
         NAME=$(npm pkg get name | tr -d '"' | sed 's|.*/||')
