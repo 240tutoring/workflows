@@ -25,7 +25,7 @@ runs:
     # script could steal NODE_AUTH_TOKEN.
     - name: Download package dependencies
       run: |
-        for $dir in $PACKAGE_DIRECTORIES; do
+        for dir in $PACKAGE_DIRECTORIES; do
           cd "$GITHUB_WORKSPACE/$dir"
           npm ci --ignore-scripts
         done
@@ -36,7 +36,7 @@ runs:
     # `npm rebuild` will run all those post-install scripts for us.
     # - name: Install package dependencies
     #   run: |
-    #     for $dir in $PACKAGE_DIRECTORIES; do
+    #     for dir in $PACKAGE_DIRECTORIES; do
     #       cd "$GITHUB_WORKSPACE/$dir"
     #       npm rebuild && npm run prepare --if-present
     #     done
