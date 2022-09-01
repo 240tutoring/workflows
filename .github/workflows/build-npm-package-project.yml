@@ -10,7 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      run: echo ${{ inputs.package-directories }}
+      - run: echo ${{ inputs.package-directories }}
       # - uses: actions/checkout@v3
       # - uses: ./.github/actions/setup-npm-package-project
       #   with:
