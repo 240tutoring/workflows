@@ -43,7 +43,7 @@ runs:
       env:
         PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
       shell: bash
-    - Configure build name
+    - name: Configure build name
       run: |
         NAME=$(npm pkg get name | tr -d '"' | sed 's|.*/||')
         VERSION=$(npm pkg get version | tr -d '"')
