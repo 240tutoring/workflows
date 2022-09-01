@@ -33,7 +33,7 @@ runs:
         NODE_AUTH_TOKEN: ${{ inputs.npm-auth-token }}
         PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
       shell: bash
-    `npm rebuild` will run all those post-install scripts for us.
+    # `npm rebuild` will run all those post-install scripts for us.
     - name: Install package dependencies
       run: |
         for dir in $PACKAGE_DIRECTORIES; do
