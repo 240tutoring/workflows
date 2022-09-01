@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-npm-package-project
+      - uses: 240tutoring/workflows/actions/setup-npm-package-project
         with:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
           package-directories: ${{ inputs.package-directories }}
@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
-        uses: ./.github/actions/setup-npm-package-project
+        uses: 240tutoring/workflows/actions/setup-npm-package-project
         with:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
           package-directories: ${{ inputs.package-directories }}
