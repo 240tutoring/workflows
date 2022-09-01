@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{ inputs.package-directories }}
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       # - uses: ./.github/actions/setup-npm-package-project
       #   with:
       #     npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
