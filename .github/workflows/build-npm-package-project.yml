@@ -13,41 +13,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-npm-package-project
-        with:
-          npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
-          package-directories: ${{ inputs.package-directories }}
-      - name: Run tests
-        env:
-          PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
-        run: |
-          for dir in $PACKAGE_DIRECTORIES; do
-            cd "$GITHUB_WORKSPACE/$dir"
-            npm run ci:test
-          done
+      # - uses: ./.github/actions/setup-npm-package-project
+      #   with:
+      #     npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
+      #     package-directories: ${{ inputs.package-directories }}
+      # - name: Run tests
+      #   env:
+      #     PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
+      #   run: |
+      #     for dir in $PACKAGE_DIRECTORIES; do
+      #       cd "$GITHUB_WORKSPACE/$dir"
+      #       npm run ci:test
+      #     done
 
-  package:
-    needs: test
-    if: ${{ needs.test.result == 'success' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        uses: ./.github/actions/setup-npm-package-project
-        with:
-          npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
-          package-directories: ${{ inputs.package-directories }}
-      - name: Build packages
-        env:
-          PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
-        run: |
-          for dir in $PACKAGE_DIRECTORIES; do
-            cd "$GITHUB_WORKSPACE/$dir"
-            npm run ci:build
-            npm pack --pack-destination "$GITHUB_WORKSPACE/build"
-          done
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.BUILD_NAME }}.zip
-          path: ./build/
+  # package:
+  #   needs: test
+  #   if: ${{ needs.test.result == 'success' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Install dependencies
+  #       uses: ./.github/actions/setup-npm-package-project
+  #       with:
+  #         npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
+  #         package-directories: ${{ inputs.package-directories }}
+  #     - name: Build packages
+  #       env:
+  #         PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
+  #       run: |
+  #         for dir in $PACKAGE_DIRECTORIES; do
+  #           cd "$GITHUB_WORKSPACE/$dir"
+  #           npm run ci:build
+  #           npm pack --pack-destination "$GITHUB_WORKSPACE/build"
+  #         done
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ env.BUILD_NAME }}.zip
+  #         path: ./build/
   
