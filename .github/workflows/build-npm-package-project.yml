@@ -23,7 +23,7 @@ jobs:
         run: |
           for dir in $PACKAGE_DIRECTORIES; do
             cd "$GITHUB_WORKSPACE/$dir"
-            npm ci:test
+            npm run ci:test
           done
 
   package:
