@@ -16,13 +16,7 @@ jobs:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
           package-directories: ${{ inputs.package-directories }}
       - name: Run tests
-        env:
-          PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
-        run: |
-          for dir in $PACKAGE_DIRECTORIES; do
-            cd "$GITHUB_WORKSPACE/$dir"
-            npm run ci:test
-          done
+        run: npm run ci:test
 
   package:
     needs: test
@@ -36,17 +30,12 @@ jobs:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
           package-directories: ${{ inputs.package-directories }}
       - name: Build packages
-        env:
-          PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
         run: |
-          for dir in $PACKAGE_DIRECTORIES; do
-            mkdir -p build
-            cd "$GITHUB_WORKSPACE/$dir"
-            npm run ci:build
-            npm pack --pack-destination "$GITHUB_WORKSPACE/build"
-          done
+          mkdir .cibuild
+          npm run ci:build
+          npm pack --pack-destination .cibuild
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ env.BUILD_NAME }}.zip
-          path: ./build/
+          path: .cibuild
   
