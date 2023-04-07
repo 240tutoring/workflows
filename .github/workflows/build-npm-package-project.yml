@@ -41,6 +41,7 @@ jobs:
           name: ${{ env.BUILD_NAME }}.zip
           path: .cibuild
       - name: Publish packages
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
         run: npm ci:publish --if-present
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
