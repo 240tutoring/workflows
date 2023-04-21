@@ -32,7 +32,7 @@ jobs:
       - name: Build packages
         run: |
           mkdir .cibuild
-          npm run ci:build
+          npm run ci:build --if-present
           npm pack --pack-destination .cibuild
         env:
           BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }}
