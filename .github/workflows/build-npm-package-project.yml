@@ -7,40 +7,29 @@ on:
         type: string
 
 jobs:
-  test:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: 240tutoring/workflows/actions/setup-npm-package-project@main
-        with:
-          npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
-          package-directories: ${{ inputs.package-directories }}
-      - name: Run tests
-        run: npm run ci:test
-
-  package:
-    needs: test
-    if: ${{ needs.test.result == 'success' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      
+      - name: Setup Project Workspace
         uses: 240tutoring/workflows/actions/setup-npm-package-project@main
         with:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
           package-directories: ${{ inputs.package-directories }}
-      - name: Build packages
-        run: |
-          mkdir .cibuild
-          npm run ci:build --if-present
-          npm pack --pack-destination .cibuild
-        env:
-          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }}
-      - uses: actions/upload-artifact@v3
+      
+      - name: Run tests
+        run: npm run lint && npm run test
+
+      - name: Create Release Pull Request / Publish
+        id: changesets
+        uses: changesets/action@v1
         with:
-          name: ${{ env.BUILD_NAME }}.zip
-          path: .cibuild
-      - name: Publish packages
-        run: npm run ci:publish --if-present
+          version: npm run changesets-version
+          publish: npm run changesets-publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Enable changesets action to create pr
+          GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
+          # Allow project publish steps to access private repositories
+          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }} # allow private repo access
