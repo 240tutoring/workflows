@@ -26,8 +26,8 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: npm run changesets-version
-          publish: npm run changesets-publish
+          version: npm run changeset:version
+          publish: npm run changeset:publish
         env:
           # Enable changesets action to create pr
           GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
