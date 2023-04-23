@@ -31,5 +31,7 @@ jobs:
         env:
           # Enable changesets action to create pr
           GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
-          # Allow project publish steps to access private repositories
-          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }} # allow private repo access
+          # Allow project build steps to access private repositories
+          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }}
+          # Allow npm publish step to authenticate with github package registry
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
