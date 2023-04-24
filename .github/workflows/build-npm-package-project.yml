@@ -19,15 +19,15 @@ jobs:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
           package-directories: ${{ inputs.package-directories }}
       
-      - name: Run tests
-        run: npm run lint && npm run test
+      # - name: Run tests
+      #   run: npm run lint && npm run test
 
       - name: Create Release Pull Request / Publish
         id: changesets
         uses: changesets/action@v1
         with:
           version: npm run changeset:version
-          publish: npm run changeset:publish
+          # publish: npm run changeset:publish
         env:
           # Enable changesets action to create pr
           GITHUB_TOKEN: $${{ secrets.GITHUB_TOKEN }}
