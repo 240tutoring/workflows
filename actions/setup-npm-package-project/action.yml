@@ -25,6 +25,7 @@ runs:
     # script could steal NODE_AUTH_TOKEN.
     - name: Download Package Dependencies
       run: npm ci --ignore-scripts
+      shell: bash
       env:
         NODE_AUTH_TOKEN: ${{ inputs.npm-auth-token }}
         PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
@@ -32,6 +33,7 @@ runs:
     # `npm rebuild` will run all those post-install scripts for us.
     - name: Install Package Dependencies
       run: npm rebuild && npm run prepare --if-present
+      shell: bash
       env:
         PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
   
