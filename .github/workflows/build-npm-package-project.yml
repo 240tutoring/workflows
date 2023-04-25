@@ -1,11 +1,6 @@
 on:
   workflow_call:
-    inputs:
-      package-directories:
-        description: 'space delimited list of package directories to build'
-        default: '.'
-        type: string
-
+  
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -17,7 +12,6 @@ jobs:
         uses: 240tutoring/workflows/actions/setup-npm-package-project@main
         with:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
-          package-directories: ${{ inputs.package-directories }}
       
       # - name: Run tests
       #   run: npm run lint && npm run test
