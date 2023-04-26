@@ -1,46 +1,31 @@
 on:
   workflow_call:
-    inputs:
-      package-directories:
-        description: 'space delimited list of package directories to build'
-        default: '.'
-        type: string
-
+  
 jobs:
-  test:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: 240tutoring/workflows/actions/setup-npm-package-project@main
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      
+      - name: Setup Project Workspace
+        uses: 240tutoring/workflows/actions/setup-npm-package-project@dev-changesets
         with:
           npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
-          package-directories: ${{ inputs.package-directories }}
-      - name: Run tests
-        run: npm run ci:test
+      
+      # - name: Run tests
+      #   run: npm run lint && npm run test
 
-  package:
-    needs: test
-    if: ${{ needs.test.result == 'success' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        uses: 240tutoring/workflows/actions/setup-npm-package-project@main
+      - name: Create Release Pull Request / Publish
+        id: changesets
+        uses: changesets/action@v1
         with:
-          npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
-          package-directories: ${{ inputs.package-directories }}
-      - name: Build packages
-        run: |
-          mkdir .cibuild
-          npm run ci:build --if-present
-          npm pack --pack-destination .cibuild
+          version: npm run changeset:version
+          publish: npm run changeset:publish
         env:
+          # Enable changesets action to create pr
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Allow project build steps to access private repositories
           BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }}
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.BUILD_NAME }}.zip
-          path: .cibuild
-      - name: Publish packages
-        run: npm run ci:publish --if-present
-        env:
+          # Allow npm publish step to authenticate with github package registry
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,6 +1,6 @@
 # Based on documentation from actions/setup-node for installing private packages
 # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#use-private-packages
-name: 'Setup npm package project'
+name: 'Setup NPM Package Project'
 Description: 'Intialize an npm based project with private packages'
 inputs:
   node-version:
@@ -11,44 +11,26 @@ inputs:
     default: 'https://npm.pkg.github.com'
   npm-auth-token:
     description: 'Token used to authenticate with npm'
-  package-directories:
-    description: 'Space delimited list of package directories to initialize'
-    default: '.'
+
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v3
+    - name: Setup Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
         registry-url: ${{ inputs.registry-url }}
+    
     # Skip post-install scripts here, as a malicious
     # script could steal NODE_AUTH_TOKEN.
-    - name: Download package dependencies
-      run: |
-        for dir in $PACKAGE_DIRECTORIES; do
-          cd "$GITHUB_WORKSPACE/$dir"
-          npm ci --ignore-scripts
-        done
+    - name: Download Package Dependencies
+      run: npm ci --ignore-scripts
+      shell: bash
       env:
         NODE_AUTH_TOKEN: ${{ inputs.npm-auth-token }}
-        PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
-      shell: bash
+    
     # `npm rebuild` will run all those post-install scripts for us.
-    - name: Install package dependencies
-      run: |
-        for dir in $PACKAGE_DIRECTORIES; do
-          cd "$GITHUB_WORKSPACE/$dir"
-          npm rebuild && npm run prepare --if-present
-        done
-      env:
-        PACKAGE_DIRECTORIES: ${{ inputs.package-directories }}
-      shell: bash
-    - name: Configure build name
-      run: |
-        NAME=$(npm pkg get name | tr -d '"' | sed 's|.*/||')
-        VERSION=$(npm pkg get version | tr -d '"')
-        BRANCH=$(git branch --show-current)
-        SHA=$(git rev-parse HEAD)
-        echo "BUILD_NAME=$NAME-v$VERSION-$BRANCH-$SHA" >> $GITHUB_ENV
+    - name: Install Package Dependencies
+      run: npm rebuild && npm run prepare --if-present
       shell: bash
   
