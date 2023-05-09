@@ -19,6 +19,8 @@ jobs:
       - name: Build
         if: github.ref != 'refs/heads/main'
         run: npm run build
+        with:
+          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }}
 
       - name: Create Release Pull Request / Publish
         if: github.ref == 'refs/heads/main'
