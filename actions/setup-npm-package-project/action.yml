@@ -5,7 +5,10 @@ Description: 'Intialize an npm based project with private packages'
 inputs:
   node-version:
     description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
-    default: '16'
+    default: ''
+  node-version-file:
+    description: 'File containing the version Spec of the version to use.  Examples: .nvmrc, .node-version, .tool-versions.'
+    default: '.nvmrc'
   registry-url:
     description: 'Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN.'
     default: 'https://npm.pkg.github.com'
@@ -19,6 +22,7 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
         registry-url: ${{ inputs.registry-url }}
     
     # Skip post-install scripts here, as a malicious
