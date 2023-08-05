@@ -11,7 +11,7 @@ jobs:
       - name: Setup Project Workspace
         uses: 240tutoring/workflows/actions/setup-npm-package-project@main
         with:
-          npm-auth-token: ${{ secrets.BUILDER_TOKEN }}
+          npm-auth-token: ${{ secrets.BUILDER_TOKEN || secrets.GITHUB_TOKEN }}
       
       - name: Run tests
         run: npm run lint && npm run test
@@ -20,7 +20,7 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: npm run build
         env:
-          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }}
+          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN  || secrets.GITHUB_TOKEN }}
 
       - name: Create Release Pull Request / Publish
         if: github.ref == 'refs/heads/main'
@@ -32,6 +32,6 @@ jobs:
           # Enable changesets action to create pr
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Allow project build steps to access private repositories
-          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN }}
+          BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN  || secrets.GITHUB_TOKEN }}
           # Allow npm publish step to authenticate with github package registry
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
