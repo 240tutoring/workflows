@@ -18,7 +18,7 @@ jobs:
 
       - name: Build
         if: github.ref != 'refs/heads/main'
-        run: npm run build
+        run: npm run build --if-present
         env:
           BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN || secrets.GITHUB_TOKEN }}
 
