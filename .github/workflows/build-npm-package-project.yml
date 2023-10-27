@@ -16,14 +16,16 @@ jobs:
       - name: Run tests
         run: npm run lint && npm run test
 
+      # Verify that building will succeed if we are not on a branch that we are publishing from
       - name: Build
-        if: github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/main' && hashFiles('.changeset/pre.json') == ''
         run: npm run build --if-present
         env:
           BUILDER_TOKEN: ${{ secrets.BUILDER_TOKEN || secrets.GITHUB_TOKEN }}
 
+      # Publish from either the main branch, or any branch in pre release mode
       - name: Create Release Pull Request / Publish
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || hashFiles('.changeset/pre.json') != ''
         uses: changesets/action@v1
         with:
           version: npm run changeset:version
