@@ -1,6 +1,7 @@
 name: pre-merge-checks
-on: workflow_call
-
+on: 
+  - workflow_call
+  - pull_request
 jobs:
   setup:
     runs-on: ubuntu-latest
