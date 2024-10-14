@@ -2,6 +2,7 @@ name: pre-merge-checks
 on: 
   - workflow_call
   - pull_request
+  - pull_request_target
 jobs:
   setup:
     runs-on: ubuntu-latest
