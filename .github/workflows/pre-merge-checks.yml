@@ -1,6 +1,5 @@
 name: pre-merge-checks
 on: workflow_call
-
 jobs:
   setup:
     runs-on: ubuntu-latest
