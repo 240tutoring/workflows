@@ -1,5 +1,5 @@
-name: lint audit and build checks
-on: push
+name: pre-merge-checks
+on: workflow_call
 
 jobs:
   setup:
