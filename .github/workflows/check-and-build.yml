@@ -1,5 +1,7 @@
 name: check-and-build
-on: workflow_call
+on: 
+  - workflow_call
+  - workflow_dispatch
 
 jobs:
   setup:
