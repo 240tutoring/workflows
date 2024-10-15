@@ -1,6 +1,7 @@
 name: check-and-build
 on: 
   workflow_call:
+  pull_request:
 
 jobs:
   setup:
